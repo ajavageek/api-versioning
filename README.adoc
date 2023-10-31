@@ -1,0 +1,34 @@
+= Versioning with Apache APISIX
+
+First, launch the Docker Compose file:
+
+[source,bash]
+----
+docker compose up
+----
+
+It offers two versions of a service, v1 and v2.
+
+Try the following commands to access the service:
+
+[options="header,autowidth"]
+|===
+
+| Routing | Command
+
+| Path-based
+a|
+* `curl http://localhost:9080/v1`
+* `curl http://localhost:9080/v2`
+
+| Query parameter-based
+a|
+* `curl http://localhost:9080\?version=v1`
+* `curl http://localhost:9080\?version=v2`
+
+| Header-based
+a|
+* `curl -H 'Accept: vnd.ch.frankel.myservice.v1+json' http://localhost:9080`
+* `curl -H 'Accept: vnd.ch.frankel.myservice.v2+json' http://localhost:9080`
+
+|===

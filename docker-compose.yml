@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  apisix:
+    image: apache/apisix:3.6.0-debian
+    volumes:
+      - ./config/apisix/config.yml:/usr/local/apisix/conf/config.yaml:ro
+      - ./config/apisix/apisix.yml:/usr/local/apisix/conf/apisix.yaml:ro
+    ports:
+      - "9080:9080"
+  version1:
+    image: busybox:1.36
+    command: ["/bin/busybox", "httpd", "-f", "-p", "8080"]
+    volumes:
+      - ./config/httpd/httpd.conf:/etc/httpd.conf
+      - ./config/content/version1:/www
+  version2:
+    image: busybox:1.36
+    command: ["/bin/busybox", "httpd", "-f", "-p", "8080"]
+    volumes:
+      - ./config/httpd/httpd.conf:/etc/httpd.conf
+      - ./config/content/version2:/www

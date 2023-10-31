@@ -1,0 +1,40 @@
+upstreams:
+  - id: 1
+    nodes:
+      "version1:8080": 1
+  - id: 2
+    nodes:
+      "version2:8080": 1
+
+routes:
+  - uri: /v1*
+    upstream_id: 1
+    plugins:
+      proxy-rewrite:
+        regex_uri: [ "/v1(?:/?)(.*)", "/$1" ]
+  - uri: /v2*
+    upstream_id: 2
+    plugins:
+      proxy-rewrite:
+        regex_uri: [ "/v2(?:/?)(.*)", "/$1" ]
+  - uri: /*
+    upstream_id: 1
+    vars: [[ "arg_version", "==", "v1" ]]
+    priority: 5
+  - uri: /*
+    upstream_id: 2
+    vars: [[ "arg_version", "==", "v2" ]]
+    priority: 4
+  - uri: /*
+    upstream_id: 1
+    vars: [[ "http_accept", "==", "vnd.ch.frankel.myservice.v1+json" ]]
+    priority: 3
+  - uri: /*
+    upstream_id: 2
+    vars: [[ "http_accept", "==", "vnd.ch.frankel.myservice.v2+json" ]]
+    priority: 2
+  - uri: /*
+    upstream_id: 1
+    priority: 1
+
+#END
